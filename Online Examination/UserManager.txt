@@ -1,0 +1,75 @@
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
+
+public class UserManager {
+    private Map<String, User> users;
+    private static final String DATA_FILE = "users.ser";
+
+    public UserManager() {
+        users = new HashMap<>();
+        loadUsers();
+    }
+
+    public void registerUser(String username, String password, String profile) {
+        if (!users.containsKey(username)) {
+            User newUser = new User(username, password, profile);
+            users.put(username, newUser);
+            saveUsers();
+            System.out.println("User registered successfully");
+        } else {
+            System.out.println("Username already exists");
+        }
+    }
+
+    public User loginUser(String username, String password) {
+        User user = users.get(username);
+        if (user != null && user.getPassword().equals(password)) {
+            System.out.println("Login successful");
+            return user;
+        } else {
+            System.out.println("Invalid username or password");
+            return null;
+        }
+    }
+
+    public void updateUserProfile(String username, String profile) {
+        User user = users.get(username);
+        if (user != null) {
+            user.setProfile(profile);
+            saveUsers();
+            System.out.println("Profile updated successfully");
+        } else {
+            System.out.println("User not found");
+        }
+    }
+
+    public void updateUserPassword(String username, String newPassword) {
+        User user = users.get(username);
+        if (user != null) {
+            user.setPassword(newPassword);
+            saveUsers();
+            System.out.println("Password updated successfully");
+        } else {
+            System.out.println("User not found");
+        }
+    }
+
+    private void loadUsers() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(DATA_FILE))) {
+            users = (Map<String, User>) ois.readObject();
+        } catch (FileNotFoundException e) {
+            System.out.println("Data file not found, starting with an empty user list");
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveUsers() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(DATA_FILE))) {
+            oos.writeObject(users);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}

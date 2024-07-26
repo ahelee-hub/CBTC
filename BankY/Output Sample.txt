@@ -1,0 +1,40 @@
+BankY - Basic Banking System
+1. Create Account
+2. Deposit
+3. Withdraw
+4. Transfer
+5. Exit
+Choose an option: 1
+Enter account number: 56
+Enter account holder name: Ahelee
+Account created for Ahelee
+
+BankY - Basic Banking System
+1. Create Account
+2. Deposit
+3. Withdraw
+4. Transfer
+5. Exit
+Choose an option: 2
+Enter account number: 56
+Enter amount to deposit: 10000
+Deposited 10000.0. New balance: 10000.0
+
+BankY - Basic Banking System
+1. Create Account
+2. Deposit
+3. Withdraw
+4. Transfer
+5. Exit
+Choose an option: 3
+Enter account number: 56
+Enter amount to withdraw: 2000
+Withdrew 2000.0. New balance: 8000.0
+
+BankY - Basic Banking System
+1. Create Account
+2. Deposit
+3. Withdraw
+4. Transfer
+5. Exit
+Choose an option: 5

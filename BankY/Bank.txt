@@ -1,0 +1,77 @@
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
+
+public class Bank {
+    private Map<String, Account> accounts;
+    private static final String DATA_FILE = "accounts.ser";
+
+    public Bank() {
+        accounts = new HashMap<>();
+        loadAccounts();
+    }
+
+    public void createAccount(String accountNumber, String accountHolder) {
+        if (!accounts.containsKey(accountNumber)) {
+            Account newAccount = new Account(accountNumber, accountHolder);
+            accounts.put(accountNumber, newAccount);
+            saveAccounts();
+            System.out.println("Account created for " + accountHolder);
+        } else {
+            System.out.println("Account number already exists");
+        }
+    }
+
+    public Account getAccount(String accountNumber) {
+        return accounts.get(accountNumber);
+    }
+
+    public void deposit(String accountNumber, double amount) {
+        Account account = getAccount(accountNumber);
+        if (account != null) {
+            account.deposit(amount);
+            saveAccounts();
+        } else {
+            System.out.println("Account not found");
+        }
+    }
+
+    public void withdraw(String accountNumber, double amount) {
+        Account account = getAccount(accountNumber);
+        if (account != null) {
+            account.withdraw(amount);
+            saveAccounts();
+        } else {
+            System.out.println("Account not found");
+        }
+    }
+
+    public void transfer(String fromAccountNumber, String toAccountNumber, double amount) {
+        Account fromAccount = getAccount(fromAccountNumber);
+        Account toAccount = getAccount(toAccountNumber);
+        if (fromAccount != null && toAccount != null) {
+            fromAccount.transfer(toAccount, amount);
+            saveAccounts();
+        } else {
+            System.out.println("One or both accounts not found");
+        }
+    }
+
+    private void loadAccounts() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(DATA_FILE))) {
+            accounts = (Map<String, Account>) ois.readObject();
+        } catch (FileNotFoundException e) {
+            System.out.println("Data file not found, starting with an empty account list");
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveAccounts() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(DATA_FILE))) {
+            oos.writeObject(accounts);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}

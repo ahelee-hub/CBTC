@@ -1,0 +1,84 @@
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        UserManager userManager = new UserManager();
+        User currentUser = null;
+
+        while (true) {
+            System.out.println("\nOnline Exam System");
+            System.out.println("1. Register");
+            System.out.println("2. Login");
+            System.out.println("3. Update Profile");
+            System.out.println("4. Update Password");
+            System.out.println("5. Start Exam");
+            System.out.println("6. Logout");
+            System.out.println("7. Exit");
+            System.out.print("Choose an option: ");
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter username: ");
+                    String registerUsername = scanner.next();
+                    System.out.print("Enter password: ");
+                    String registerPassword = scanner.next();
+                    System.out.print("Enter profile: ");
+                    String registerProfile = scanner.next();
+                    userManager.registerUser(registerUsername, registerPassword, registerProfile);
+                    break;
+                case 2:
+                    System.out.print("Enter username: ");
+                    String loginUsername = scanner.next();
+                    System.out.print("Enter password: ");
+                    String loginPassword = scanner.next();
+                    currentUser = userManager.loginUser(loginUsername, loginPassword);
+                    break;
+                case 3:
+                    if (currentUser != null) {
+                        System.out.print("Enter new profile: ");
+                        String newProfile = scanner.next();
+                        userManager.updateUserProfile(currentUser.getUsername(), newProfile);
+                    } else {
+                        System.out.println("Please login first");
+                    }
+                    break;
+                case 4:
+                    if (currentUser != null) {
+                        System.out.print("Enter new password: ");
+                        String newPassword = scanner.next();
+                        userManager.updateUserPassword(currentUser.getUsername(), newPassword);
+                    } else {
+                        System.out.println("Please login first");
+                    }
+                    break;
+                case 5:
+                    if (currentUser != null) {
+                        List<MCQ> questions = Arrays.asList(
+                            new MCQ("What is the capital of France?", Arrays.asList("Berlin", "Madrid", "Paris", "Rome"), 2),
+                            new MCQ("What is 2 + 2?", Arrays.asList("3", "4", "5", "6"), 1)
+                        );
+                        int timeLimit = 60; // 60 seconds
+                        ExamSession examSession = new ExamSession(currentUser, questions, timeLimit);
+                        examSession.startExam();
+                    } else {
+                        System.out.println("Please login first");
+                    }
+                    break;
+                case 6:
+                    currentUser = null;
+                    System.out.println("Logged out successfully");
+                    break;
+                case 7:
+                    scanner.close();
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+            }
+        }
+    }
+}
